@@ -23,14 +23,9 @@ export default function WelcomePage() {
           <div className="relative z-10">
             {/* Logo + tagline */}
             <div className="mb-12">
-              <h1
-                className="text-white font-bold tracking-widest"
-                style={{ fontSize: '3.75rem', lineHeight: 1.1 }}
-              >
-                STaQ
-              </h1>
+              <img src="/logo.png" alt="STaQ" className="w-24 h-24 rounded-2xl" />
               <p
-                className="font-semibold mt-1 tracking-wider uppercase"
+                className="font-semibold mt-3 tracking-wider uppercase"
                 style={{ color: '#fbbf24', fontSize: '1.125rem' }}
               >
                 Self Travel &amp; Quest

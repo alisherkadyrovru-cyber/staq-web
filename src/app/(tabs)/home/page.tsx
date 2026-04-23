@@ -37,7 +37,7 @@ export default function HomePage() {
       >
         <div className="px-5 py-4 flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold" style={{ color: '#0f172a' }}>STaQ</p>
+            <img src="/logo.png" alt="STaQ" className="w-8 h-8 rounded-lg" />
             <p className="text-sm" style={{ color: '#64748b' }}>
               Hello, {profile?.name ?? 'Explorer'} 👋
             </p>
