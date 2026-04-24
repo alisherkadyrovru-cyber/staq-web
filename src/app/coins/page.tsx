@@ -11,6 +11,7 @@ const PACKAGES = [
   { coins: 500,  price: 35.0 },
   { coins: 1000, price: 65.0 },
   { coins: 2000, price: 100.0 },
+  { coins: 5000, price: 200.0, bestValue: true },
 ];
 
 export default function CoinsPage() {
@@ -99,6 +100,22 @@ export default function CoinsPage() {
                       }}
                     >
                       POPULAR
+                    </span>
+                  )}
+                  {'bestValue' in pkg && pkg.bestValue && (
+                    <span
+                      className="absolute font-bold text-white"
+                      style={{
+                        top: -10,
+                        right: 12,
+                        background: 'linear-gradient(90deg, #d97706, #f59e0b)',
+                        borderRadius: 10,
+                        padding: '3px 8px',
+                        fontSize: 10,
+                        letterSpacing: '0.02em',
+                      }}
+                    >
+                      BEST VALUE
                     </span>
                   )}
                   <span
