@@ -6,6 +6,7 @@ import Link from 'next/link';
 import {
   Bell, Compass, Diamond, ChevronRight,
   User, Lock, Languages, HelpCircle, MessageSquare,
+  CreditCard, Mail, KeyRound, Shield, History, Trash2,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
 import { signOut } from '@/lib/repo';
@@ -14,12 +15,22 @@ const LEVEL_LABELS: Record<number, string> = {
   1: 'Wanderer', 2: 'Explorer', 3: 'Adventurer', 4: 'Pathfinder', 5: 'Legend',
 };
 
-const MENU_ITEMS = [
-  { Icon: User,         label: 'Account Settings' },
-  { Icon: Lock,         label: 'Privacy'          },
-  { Icon: Languages,    label: 'Language'         },
-  { Icon: HelpCircle,   label: 'Help & FAQ'       },
-  { Icon: MessageSquare,label: 'Feedback'         },
+const ACCOUNT_SETTINGS = [
+  { Icon: User,         label: 'Personal Details',          href: '/settings/personal-details' },
+  { Icon: CreditCard,   label: 'Saved Cards',               href: '/settings/saved-cards' },
+  { Icon: Mail,         label: 'Change Email',              href: '/settings/change-email' },
+  { Icon: KeyRound,     label: 'Password Update',           href: '/settings/password-update' },
+  { Icon: Shield,       label: 'Personal Data Protection',  href: '/settings/data-protection' },
+  { Icon: Bell,         label: 'Notification Settings',     href: '/settings/notifications' },
+  { Icon: History,      label: 'Login History',             href: '/settings/login-history' },
+  { Icon: Trash2,       label: 'Delete Account',            href: '/settings/delete-account' },
+] as const;
+
+const MORE_ITEMS = [
+  { Icon: Lock,          label: 'Privacy'   },
+  { Icon: Languages,     label: 'Language'  },
+  { Icon: HelpCircle,    label: 'Help & FAQ'},
+  { Icon: MessageSquare, label: 'Feedback'  },
 ] as const;
 
 export default function ProfilePage() {
@@ -27,7 +38,7 @@ export default function ProfilePage() {
   const profile = useAuthStore((s) => s.profile);
   const logout  = useAuthStore((s) => s.logout);
 
-  const [signOutConfirm,  setSignOutConfirm]  = useState(false);
+  const [signOutConfirm, setSignOutConfirm] = useState(false);
 
   const levelLabel  = LEVEL_LABELS[profile?.level ?? 1] ?? 'Wanderer';
   const totalPoints = profile?.totalPoints ?? 0;
@@ -62,7 +73,6 @@ export default function ProfilePage() {
           className="flex gap-4 rounded-2xl p-5 bg-white"
           style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
         >
-          {/* Left: avatar + name */}
           <div className="flex flex-col items-center justify-center gap-1.5" style={{ width: '40%' }}>
             <div
               className="flex items-center justify-center rounded-full"
@@ -84,7 +94,6 @@ export default function ProfilePage() {
             </span>
           </div>
 
-          {/* Right: 2×2 stats */}
           <div className="flex-1 flex flex-col gap-2.5">
             <div className="flex gap-2.5">
               <MiniStat label="Earned"    value={String(totalPoints)} />
@@ -118,19 +127,55 @@ export default function ProfilePage() {
           </Link>
         </div>
 
-        {/* ── Settings menu ── */}
+        {/* ── Account Settings ── */}
         <div>
           <p
             className="text-xs font-bold uppercase tracking-wider mb-2 px-1"
             style={{ color: '#94a3b8', letterSpacing: '0.08em' }}
           >
-            Settings
+            Account Settings
           </p>
           <div
             className="rounded-2xl overflow-hidden bg-white"
             style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
           >
-            {MENU_ITEMS.map(({ Icon, label }, i) => (
+            {ACCOUNT_SETTINGS.map(({ Icon, label, href }, i) => (
+              <div key={href}>
+                <Link
+                  href={href}
+                  className="w-full flex items-center px-4 py-3.5 transition-colors hover:bg-slate-50"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Icon size={20} color={label === 'Delete Account' ? '#ef4444' : '#4f46e5'} />
+                  <span
+                    className="flex-1 text-left ml-3 text-[15px]"
+                    style={{ color: label === 'Delete Account' ? '#ef4444' : '#0f172a' }}
+                  >
+                    {label}
+                  </span>
+                  <ChevronRight size={18} color="#94a3b8" />
+                </Link>
+                {i < ACCOUNT_SETTINGS.length - 1 && (
+                  <div style={{ height: 1, backgroundColor: '#f1f5f9', marginLeft: 48 }} />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── More ── */}
+        <div>
+          <p
+            className="text-xs font-bold uppercase tracking-wider mb-2 px-1"
+            style={{ color: '#94a3b8', letterSpacing: '0.08em' }}
+          >
+            More
+          </p>
+          <div
+            className="rounded-2xl overflow-hidden bg-white"
+            style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
+          >
+            {MORE_ITEMS.map(({ Icon, label }, i) => (
               <div key={label}>
                 <button
                   onClick={() => alert(`${label} coming soon`)}
@@ -142,7 +187,7 @@ export default function ProfilePage() {
                   </span>
                   <ChevronRight size={18} color="#94a3b8" />
                 </button>
-                {i < MENU_ITEMS.length - 1 && (
+                {i < MORE_ITEMS.length - 1 && (
                   <div style={{ height: 1, backgroundColor: '#f1f5f9', marginLeft: 48 }} />
                 )}
               </div>
