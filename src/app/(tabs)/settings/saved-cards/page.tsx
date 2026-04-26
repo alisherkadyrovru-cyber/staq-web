@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, CreditCard, X } from 'lucide-react';
+import { ChevronLeft, CreditCard, X } from 'lucide-react';
 
 interface Card {
   id: string;
@@ -22,7 +22,6 @@ export default function SavedCardsPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // Add card form state
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
   const [expiry, setExpiry] = useState('');
@@ -59,86 +58,92 @@ export default function SavedCardsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center" style={{ backgroundColor: '#0a0a1a' }}>
-      <div className="w-full max-w-[430px] min-h-screen flex flex-col">
+    <div style={{ backgroundColor: '#f8fafc', minHeight: '100%' }}>
 
-        {/* Header */}
-        <div className="flex items-center gap-3 px-5 pt-14 pb-6">
-          <button onClick={() => router.back()} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
-            <ArrowLeft size={22} color="#ffffff" />
-          </button>
-          <h1 className="text-xl font-bold text-white">Saved Cards</h1>
-        </div>
+      {/* Header */}
+      <div
+        className="sticky top-0 z-10 relative flex items-center justify-center px-4"
+        style={{ height: 56, backgroundColor: '#ffffff', borderBottom: '1px solid #f1f5f9' }}
+      >
+        <button
+          onClick={() => router.back()}
+          className="absolute left-4 flex items-center gap-1"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4f46e5' }}
+        >
+          <ChevronLeft size={22} color="#4f46e5" />
+          <span className="text-[15px] font-semibold">Back</span>
+        </button>
+        <span className="font-bold text-[17px]" style={{ color: '#0f172a' }}>Saved Cards</span>
+      </div>
 
-        {/* Card list */}
-        <div className="flex-1 px-5 flex flex-col gap-3">
-          {cards.map((card) => (
-            <div
-              key={card.id}
-              className="flex items-center gap-3 rounded-2xl px-4 py-4"
-              style={{ backgroundColor: '#12122a', border: '1px solid rgba(255,255,255,0.08)' }}
-            >
-              <div
-                className="flex items-center justify-center rounded-xl"
-                style={{ width: 44, height: 44, backgroundColor: '#1e1b4b' }}
-              >
-                <CreditCard size={22} color="#f59e0b" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-white">{card.brand} •••• {card.last4}</p>
-                <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>Expires {card.expiry}</p>
-              </div>
-              <button
-                onClick={() => setDeleteTarget(card.id)}
-                className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80"
-                style={{ backgroundColor: 'rgba(239,68,68,0.15)', color: '#ef4444' }}
-              >
-                Delete
-              </button>
-            </div>
-          ))}
-
-          {cards.length === 0 && (
-            <p className="text-center py-10 text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-              No saved cards
-            </p>
-          )}
-
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="w-full rounded-2xl py-4 font-bold text-base mt-4 transition-opacity hover:opacity-90"
-            style={{ backgroundColor: '#f59e0b', color: '#0a0a1a' }}
+      {/* Card list */}
+      <div className="px-5 pt-5 pb-8 flex flex-col gap-3">
+        {cards.map((card) => (
+          <div
+            key={card.id}
+            className="flex items-center gap-3 rounded-2xl px-4 py-4 bg-white"
+            style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9' }}
           >
-            + Add New Card
-          </button>
+            <div
+              className="flex items-center justify-center rounded-xl flex-shrink-0"
+              style={{ width: 44, height: 44, backgroundColor: '#ede9fe' }}
+            >
+              <CreditCard size={22} color="#4f46e5" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>{card.brand} •••• {card.last4}</p>
+              <p className="text-xs mt-0.5" style={{ color: '#94a3b8' }}>Expires {card.expiry}</p>
+            </div>
+            <button
+              onClick={() => setDeleteTarget(card.id)}
+              className="rounded-lg px-3 py-1.5 text-xs font-semibold transition-opacity hover:opacity-80"
+              style={{ backgroundColor: '#fef2f2', color: '#ef4444', border: '1px solid #fecaca' }}
+            >
+              Delete
+            </button>
+          </div>
+        ))}
 
-          <p className="text-center text-xs mt-2" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            Real card processing not implemented yet
+        {cards.length === 0 && (
+          <p className="text-center py-10 text-sm" style={{ color: '#94a3b8' }}>
+            No saved cards
           </p>
-        </div>
+        )}
+
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="w-full rounded-2xl py-4 font-bold text-base mt-2 transition-opacity hover:opacity-90"
+          style={{ backgroundColor: '#f59e0b', color: '#ffffff' }}
+        >
+          + Add New Card
+        </button>
+
+        <p className="text-center text-xs mt-1" style={{ color: '#94a3b8' }}>
+          Real card processing not implemented yet
+        </p>
       </div>
 
       {/* Delete confirmation modal */}
       {deleteTarget && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center px-6"
-          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
           onClick={() => setDeleteTarget(null)}
         >
           <div
-            className="w-full max-w-[360px] rounded-2xl p-6"
-            style={{ backgroundColor: '#12122a' }}
+            className="w-full max-w-[360px] rounded-2xl p-6 bg-white"
+            style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <p className="text-lg font-bold text-white mb-2">Remove this card?</p>
-            <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="text-lg font-bold mb-2" style={{ color: '#0f172a' }}>Remove this card?</p>
+            <p className="text-sm mb-6" style={{ color: '#64748b' }}>
               This card will be permanently removed from your account.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
                 className="flex-1 rounded-xl py-3 font-semibold"
-                style={{ border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.6)' }}
+                style={{ border: '1px solid #e2e8f0', color: '#64748b' }}
               >
                 Cancel
               </button>
@@ -154,22 +159,22 @@ export default function SavedCardsPage() {
         </div>
       )}
 
-      {/* Add card modal */}
+      {/* Add card bottom sheet */}
       {showAddModal && (
         <div
           className="fixed inset-0 z-50 flex items-end justify-center"
-          style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
+          style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
           onClick={() => setShowAddModal(false)}
         >
           <div
-            className="w-full max-w-[430px] rounded-t-3xl p-6 pb-10 flex flex-col gap-5"
-            style={{ backgroundColor: '#12122a' }}
+            className="w-full max-w-[430px] rounded-t-3xl p-6 pb-10 bg-white flex flex-col gap-5"
+            style={{ boxShadow: '0 -4px 24px rgba(0,0,0,0.1)' }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <p className="text-lg font-bold text-white">Add New Card</p>
+              <p className="text-lg font-bold" style={{ color: '#0f172a' }}>Add New Card</p>
               <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
-                <X size={22} color="rgba(255,255,255,0.5)" />
+                <X size={22} color="#94a3b8" />
               </button>
             </div>
 
@@ -180,8 +185,8 @@ export default function SavedCardsPage() {
                 onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                 placeholder="4242 4242 4242 4242"
                 inputMode="numeric"
-                className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-amber-400"
-                style={{ backgroundColor: '#0a0a1a', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff' }}
+                className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a' }}
               />
             </ModalField>
 
@@ -191,8 +196,8 @@ export default function SavedCardsPage() {
                 value={cardName}
                 onChange={(e) => setCardName(e.target.value)}
                 placeholder="John Smith"
-                className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-amber-400"
-                style={{ backgroundColor: '#0a0a1a', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff' }}
+                className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-indigo-400"
+                style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a' }}
               />
             </ModalField>
 
@@ -205,8 +210,8 @@ export default function SavedCardsPage() {
                     onChange={(e) => setExpiry(formatExpiry(e.target.value))}
                     placeholder="08/27"
                     inputMode="numeric"
-                    className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-amber-400"
-                    style={{ backgroundColor: '#0a0a1a', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff' }}
+                    className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-indigo-400"
+                    style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a' }}
                   />
                 </ModalField>
               </div>
@@ -218,8 +223,8 @@ export default function SavedCardsPage() {
                     onChange={(e) => setCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
                     placeholder="•••"
                     inputMode="numeric"
-                    className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-amber-400"
-                    style={{ backgroundColor: '#0a0a1a', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff' }}
+                    className="w-full rounded-xl px-4 py-3.5 text-base outline-none focus:ring-2 focus:ring-indigo-400"
+                    style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', color: '#0f172a' }}
                   />
                 </ModalField>
               </div>
@@ -232,13 +237,13 @@ export default function SavedCardsPage() {
                 onChange={(e) => setSaveCard(e.target.checked)}
                 className="w-5 h-5 rounded accent-amber-400"
               />
-              <span className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>Save this card for future payments</span>
+              <span className="text-sm" style={{ color: '#475569' }}>Save this card for future payments</span>
             </label>
 
             <button
               onClick={handleAddCard}
               className="w-full rounded-2xl py-4 font-bold text-base transition-opacity hover:opacity-90"
-              style={{ backgroundColor: '#f59e0b', color: '#0a0a1a' }}
+              style={{ backgroundColor: '#f59e0b', color: '#ffffff' }}
             >
               Add Card
             </button>
@@ -252,7 +257,7 @@ export default function SavedCardsPage() {
 function ModalField({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>{label}</label>
+      <label className="text-sm font-medium" style={{ color: '#475569' }}>{label}</label>
       {children}
     </div>
   );

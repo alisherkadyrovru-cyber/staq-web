@@ -5,32 +5,33 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   Bell, Compass, Diamond, ChevronRight,
-  User, Lock, Languages, HelpCircle, MessageSquare,
+  Lock, Languages, HelpCircle, MessageSquare,
   CreditCard, Mail, KeyRound, Shield, History, Trash2,
+  Star, Trophy,
 } from 'lucide-react';
 import { useAuthStore } from '@/lib/store/authStore';
 import { signOut } from '@/lib/repo';
 
 const LEVEL_LABELS: Record<number, string> = {
-  1: 'Wanderer', 2: 'Explorer', 3: 'Adventurer', 4: 'Pathfinder', 5: 'Legend',
+  1: 'Wanderer', 2: 'Explorer', 3: 'Pathfinder', 4: 'Trailblazer', 5: 'Legend',
 };
 
 const ACCOUNT_SETTINGS = [
-  { Icon: User,         label: 'Personal Details',          href: '/settings/personal-details' },
-  { Icon: CreditCard,   label: 'Saved Cards',               href: '/settings/saved-cards' },
-  { Icon: Mail,         label: 'Change Email',              href: '/settings/change-email' },
-  { Icon: KeyRound,     label: 'Password Update',           href: '/settings/password-update' },
-  { Icon: Shield,       label: 'Personal Data Protection',  href: '/settings/data-protection' },
-  { Icon: Bell,         label: 'Notification Settings',     href: '/settings/notifications' },
-  { Icon: History,      label: 'Login History',             href: '/settings/login-history' },
-  { Icon: Trash2,       label: 'Delete Account',            href: '/settings/delete-account' },
+  { Icon: Compass,    label: 'Personal Details',         href: '/settings/personal-details' },
+  { Icon: CreditCard, label: 'Saved Cards',              href: '/settings/saved-cards' },
+  { Icon: Mail,       label: 'Change Email',             href: '/settings/change-email' },
+  { Icon: KeyRound,   label: 'Password Update',          href: '/settings/password-update' },
+  { Icon: Shield,     label: 'Personal Data Protection', href: '/settings/data-protection' },
+  { Icon: Bell,       label: 'Notification Settings',    href: '/settings/notifications' },
+  { Icon: History,    label: 'Login History',            href: '/settings/login-history' },
+  { Icon: Trash2,     label: 'Delete Account',           href: '/settings/delete-account' },
 ] as const;
 
 const MORE_ITEMS = [
-  { Icon: Lock,          label: 'Privacy'   },
-  { Icon: Languages,     label: 'Language'  },
-  { Icon: HelpCircle,    label: 'Help & FAQ'},
-  { Icon: MessageSquare, label: 'Feedback'  },
+  { Icon: Lock,          label: 'Privacy'    },
+  { Icon: Languages,     label: 'Language'   },
+  { Icon: HelpCircle,    label: 'Help & FAQ' },
+  { Icon: MessageSquare, label: 'Feedback'   },
 ] as const;
 
 export default function ProfilePage() {
@@ -65,15 +66,15 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* Scrollable content */}
       <div className="flex flex-col gap-4 p-4">
 
         {/* ── Profile card ── */}
         <div
-          className="flex gap-4 rounded-2xl p-5 bg-white"
+          className="rounded-2xl p-5 bg-white"
           style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
         >
-          <div className="flex flex-col items-center justify-center gap-1.5" style={{ width: '40%' }}>
+          {/* Avatar + name */}
+          <div className="flex flex-col items-center gap-2 mb-4">
             <div
               className="flex items-center justify-center rounded-full"
               style={{ width: 72, height: 72, backgroundColor: '#ede9fe' }}
@@ -83,26 +84,23 @@ export default function ProfilePage() {
             <p className="text-base font-bold text-center" style={{ color: '#0f172a' }}>
               {profile?.name ?? 'Explorer'}
             </p>
-            <p className="text-xs text-center truncate w-full" style={{ color: '#94a3b8' }}>
+            <p className="text-xs text-center" style={{ color: '#94a3b8' }}>
               {profile?.email ?? ''}
             </p>
-            <span
-              className="text-xs font-semibold rounded-full px-2.5 py-1"
+            {/* Clickable level badge */}
+            <button
+              onClick={() => router.push('/settings/levels')}
+              className="text-xs font-semibold rounded-full px-3 py-1.5 transition-opacity hover:opacity-80 active:opacity-70"
               style={{ backgroundColor: '#ede9fe', color: '#4f46e5' }}
             >
-              Level {profile?.level ?? 1} — {levelLabel}
-            </span>
+              Level {profile?.level ?? 1} — {levelLabel} ›
+            </button>
           </div>
 
-          <div className="flex-1 flex flex-col gap-2.5">
-            <div className="flex gap-2.5">
-              <MiniStat label="Earned"    value={String(totalPoints)} />
-              <MiniStat label="Spent"     value="0" />
-            </div>
-            <div className="flex gap-2.5">
-              <MiniStat label="Remaining" value={String(totalPoints)} />
-              <MiniStat label="Quests Done" value={String(questsDone)} />
-            </div>
+          {/* 2-stat row */}
+          <div className="flex gap-3">
+            <MiniStat label="Earned Points" value={String(totalPoints)} Icon={Star}   iconColor="#f59e0b" />
+            <MiniStat label="Quests Done"   value={String(questsDone)}  Icon={Trophy} iconColor="#4f46e5" />
           </div>
         </div>
 
@@ -242,14 +240,25 @@ export default function ProfilePage() {
   );
 }
 
-function MiniStat({ label, value }: { label: string; value: string }) {
+function MiniStat({
+  label,
+  value,
+  Icon,
+  iconColor,
+}: {
+  label: string;
+  value: string;
+  Icon: React.ComponentType<{ size?: number; color?: string }>;
+  iconColor: string;
+}) {
   return (
     <div
-      className="flex-1 flex flex-col items-center rounded-xl p-2.5"
+      className="flex-1 flex flex-col items-center rounded-xl p-3 gap-1"
       style={{ backgroundColor: '#f8fafc' }}
     >
-      <span className="text-[11px] font-medium mb-0.5" style={{ color: '#94a3b8' }}>{label}</span>
+      <Icon size={18} color={iconColor} />
       <span className="text-xl font-bold" style={{ color: '#0f172a' }}>{value}</span>
+      <span className="text-[11px] font-medium text-center" style={{ color: '#94a3b8' }}>{label}</span>
     </div>
   );
 }

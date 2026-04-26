@@ -25,18 +25,18 @@ export default function CoinsPage() {
 
         {/* Header */}
         <div
-          className="sticky top-0 z-10 flex items-center gap-3 px-4 py-3.5"
-          style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #f1f5f9' }}
+          className="sticky top-0 z-10 relative flex items-center justify-center px-4"
+          style={{ height: 56, backgroundColor: '#ffffff', borderBottom: '1px solid #f1f5f9' }}
         >
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-1 font-semibold"
+            className="absolute left-4 flex items-center gap-1 font-semibold"
             style={{ color: '#4f46e5' }}
           >
             <ChevronLeft size={22} color="#4f46e5" />
             <span style={{ fontSize: 15 }}>Back</span>
           </button>
-          <span className="font-bold text-lg flex-1" style={{ color: '#0f172a' }}>
+          <span className="font-bold text-[17px]" style={{ color: '#0f172a' }}>
             STaQ Coins
           </span>
         </div>
