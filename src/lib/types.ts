@@ -27,6 +27,24 @@ export type QuestCategory =
   | 'practical'
   | 'family';
 
+// Per-quest completion screen content. Optional — quests without this get the
+// generic completion screen. Quests with this get the extended reward screen.
+export interface QuestCompletionContent {
+  completionText: string;   // e.g. "You completed the Istanbul Old City Quest."
+  journeySummary: string;   // paragraph shown below the stats card
+  reward?: {
+    sectionTitle: string;   // e.g. "Reward Recommendation"
+    intro: string;          // e.g. "You have earned your final reward."
+    partnerDescription: string;
+    rewardOptions: string[]; // badge labels, e.g. ["STaQ discount", "Complimentary dessert"]
+    redemptionNote: string;  // instruction for staff
+  };
+  secretBonus?: {
+    title: string;
+    text: string;
+  };
+}
+
 export interface Quest {
   id: string;
   cityId: string;
@@ -44,6 +62,7 @@ export interface Quest {
   completionCount: number;
   startLocation: LatLng;
   route: LatLng[];
+  completionContent?: QuestCompletionContent; // custom completion/reward screen
 }
 
 // ─── Quest Step ───────────────────────────────────────────────────────────────

@@ -146,6 +146,24 @@ export const MOCK_QUESTS: Quest[] = [
       { latitude: 41.0192, longitude: 28.9745 }, // Stage 14: Eminönü Ferry View
       { latitude: 41.0167, longitude: 28.9700 }, // Stage 15: Mısır Çarşısı
     ],
+    completionContent: {
+      completionText: 'You completed the Istanbul Old City Quest.',
+      journeySummary:
+        'You walked from Sultanahmet to Eminönü, discovered hidden details, completed local challenges, and reached one of Istanbul\'s most famous historical markets.',
+      reward: {
+        sectionTitle: 'Reward Recommendation',
+        intro: 'You have earned your final reward.',
+        partnerDescription:
+          'Visit Hamdi Restaurant in Eminönü, a Turkish kebab restaurant near Mısır Çarşısı with a beautiful rooftop view over Istanbul.\n\nAs a STaQ player, you can unlock a special partner reward.',
+        rewardOptions: ['STaQ discount', 'Complimentary dessert'],
+        redemptionNote:
+          'Show your completed quest screen to the restaurant staff to receive your reward.',
+      },
+      secretBonus: {
+        title: 'Secret Bonus Coming Soon',
+        text: 'A hidden mini quest inside Hamdi Restaurant may be unlocked in the future.\n\nComplete the main quest first.\nThe secret reward will be waiting.',
+      },
+    },
   },
 ];
 

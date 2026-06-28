@@ -125,7 +125,140 @@ export default function ActiveQuestPage() {
 
   // ── Quest complete screen ─────────────────────────────────────────────────
   if (questComplete && activeState) {
-    const elapsed = Date.now() - startTimeMs;
+    const elapsed    = Date.now() - startTimeMs;
+    const cc         = activeQuest?.completionContent;
+    const handleDone = () => { clearActiveQuest(); router.replace('/quests'); };
+
+    // Compute challenge counts from completed steps for extended screen
+    const completedIds = new Set(activeState.completedSteps.map((s) => s.stepId));
+    const photoTypes   = new Set(['photo', 'photo_quiz', 'qr_photo']);
+    const videoTypes   = new Set(['video', 'video_quiz']);
+    const photoCount   = activeSteps.filter((s) => photoTypes.has(s.task.type) && completedIds.has(s.id)).length;
+    const videoCount   = activeSteps.filter((s) => videoTypes.has(s.task.type) && completedIds.has(s.id)).length;
+    const qrStep       = activeSteps.find((s) => s.task.type === 'qr_photo');
+    const qrUnlocked   = qrStep ? completedIds.has(qrStep.id) : false;
+
+    // ── Extended completion screen for quests with completionContent ──
+    if (cc) {
+      return (
+        <div
+          className="min-h-screen overflow-y-auto px-5 pb-12 pt-12"
+          style={{ backgroundColor: '#0a0a1a' }}
+        >
+          <div className="w-full max-w-[430px] mx-auto flex flex-col items-center">
+
+            {/* Trophy + title */}
+            <Trophy size={64} color="#f59e0b" />
+            <h1 className="text-white text-2xl font-bold mt-4 text-center">Quest Complete!</h1>
+            <p className="mt-2 text-sm text-center leading-relaxed font-semibold" style={{ color: '#fbbf24' }}>
+              {cc.completionText}
+            </p>
+
+            {/* Stats card */}
+            <div
+              className="w-full rounded-3xl p-5 mt-6 flex flex-col gap-3"
+              style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}
+            >
+              <CompletionRow icon={<Star  size={18} fill="#f59e0b" color="#f59e0b" />} label="Points Earned"    value={`+${activeState.totalPointsEarned}`} />
+              <CompletionRow icon={<Map   size={18} color="#a5b4fc" />}                label="Steps Completed" value={`${activeState.completedSteps.length} / ${activeSteps.length}`} />
+              <CompletionRow icon={<Clock size={18} color="#a5b4fc" />}                label="Time Taken"      value={fmtDuration(elapsed)} />
+              {photoCount > 0 && (
+                <CompletionRow icon={<span style={{ fontSize: 17, lineHeight: 1 }}>📷</span>} label="Photo Challenges"  value={String(photoCount)} />
+              )}
+              {videoCount > 0 && (
+                <CompletionRow icon={<span style={{ fontSize: 17, lineHeight: 1 }}>🎬</span>} label="Video Challenges"  value={String(videoCount)} />
+              )}
+              {qrStep && (
+                <CompletionRow icon={<span style={{ fontSize: 17, lineHeight: 1 }}>📲</span>} label="QR Bonus Unlocked" value={qrUnlocked ? 'Yes ✓' : 'Not yet'} />
+              )}
+            </div>
+
+            {/* Journey summary */}
+            <p
+              className="mt-5 text-sm text-center leading-relaxed"
+              style={{ color: 'rgba(255,255,255,0.60)' }}
+            >
+              {cc.journeySummary}
+            </p>
+
+            {/* Reward section */}
+            {cc.reward && (
+              <div
+                className="w-full rounded-2xl mt-6 overflow-hidden"
+                style={{ border: '1px solid rgba(251,191,36,0.35)' }}
+              >
+                <div className="px-5 py-3" style={{ backgroundColor: 'rgba(251,191,36,0.12)' }}>
+                  <p className="text-sm font-bold uppercase tracking-wider" style={{ color: '#fbbf24' }}>
+                    🏆 {cc.reward.sectionTitle}
+                  </p>
+                </div>
+                <div className="px-5 py-4 flex flex-col gap-3" style={{ backgroundColor: 'rgba(255,255,255,0.05)' }}>
+                  <p className="text-sm font-semibold" style={{ color: '#ffffff' }}>
+                    {cc.reward.intro}
+                  </p>
+                  <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.75)' }}>
+                    {cc.reward.partnerDescription}
+                  </p>
+                  <div className="flex gap-2 flex-wrap mt-1">
+                    {cc.reward.rewardOptions.map((opt) => (
+                      <span
+                        key={opt}
+                        className="rounded-full px-3 py-1 text-xs font-bold"
+                        style={{ backgroundColor: '#f59e0b', color: '#ffffff' }}
+                      >
+                        {opt}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.50)' }}>
+                    {cc.reward.redemptionNote}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Secret bonus */}
+            {cc.secretBonus && (
+              <div
+                className="w-full rounded-2xl mt-4 px-5 py-4"
+                style={{ backgroundColor: 'rgba(79,70,229,0.15)', border: '1px solid rgba(79,70,229,0.35)' }}
+              >
+                <p className="text-sm font-bold" style={{ color: '#a5b4fc' }}>
+                  🔮 {cc.secretBonus.title}
+                </p>
+                <p
+                  className="text-sm mt-2 leading-relaxed whitespace-pre-line"
+                  style={{ color: 'rgba(255,255,255,0.55)' }}
+                >
+                  {cc.secretBonus.text}
+                </p>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="w-full flex flex-col gap-3 mt-8">
+              <button
+                onClick={handleDone}
+                className="w-full rounded-2xl py-4 font-bold text-white text-base transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#f59e0b' }}
+              >
+                Save to Memories ✓
+              </button>
+              <button
+                onClick={handleDone}
+                className="w-full rounded-2xl py-4 font-semibold text-white text-base transition-opacity hover:opacity-80"
+                style={{ border: '1px solid rgba(255,255,255,0.30)' }}
+              >
+                Back to Quests
+              </button>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // ── Generic completion screen (existing quests without completionContent) ──
     return (
       <div
         className="min-h-screen flex flex-col items-center justify-center px-6"
@@ -148,14 +281,14 @@ export default function ActiveQuestPage() {
 
           <div className="w-full flex flex-col gap-3 mt-8">
             <button
-              onClick={() => { clearActiveQuest(); router.replace('/quests'); }}
+              onClick={handleDone}
               className="w-full rounded-2xl py-4 font-bold text-white text-base transition-opacity hover:opacity-90"
               style={{ backgroundColor: '#f59e0b' }}
             >
               Save to Memories ✓
             </button>
             <button
-              onClick={() => { clearActiveQuest(); router.replace('/quests'); }}
+              onClick={handleDone}
               className="w-full rounded-2xl py-4 font-semibold text-white text-base transition-opacity hover:opacity-80"
               style={{ border: '1px solid rgba(255,255,255,0.30)' }}
             >
