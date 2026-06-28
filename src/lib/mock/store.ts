@@ -118,33 +118,33 @@ export const MOCK_QUESTS: Quest[] = [
     cityId: 'city-istanbul',
     title: 'Istanbul Old City Quest (No Entrance Tickets Required)',
     description:
-      'Walk through 2,000 years of history in the Sultanahmet district without spending a single lira on entrance fees. From the ancient Hippodrome to the Eminönü waterfront, discover iconic monuments, local street life, and hidden corners — all from the outside.',
+      'Discover the heart of old Istanbul through photos, hidden details, local flavors, and small challenges. You do not need to enter any paid attraction to complete this quest.',
     category: 'historical',
     difficulty: 'easy',
-    durationMinutes: 180,
-    distanceKm: 4.5,
+    durationMinutes: 210,
+    distanceKm: 5.5,
     isPremium: false,
     priceUsd: 0,
     coverImage: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800',
     rating: 4.8,
     completionCount: 0,
-    startLocation: { latitude: 41.0062, longitude: 28.9778 },
+    startLocation: { latitude: 41.0057, longitude: 28.9769 },
     route: [
-      { latitude: 41.0062, longitude: 28.9778 }, // Sultanahmet Square
-      { latitude: 41.0057, longitude: 28.9769 }, // German Fountain
-      { latitude: 41.0063, longitude: 28.9769 }, // Hippodrome
-      { latitude: 41.0065, longitude: 28.9773 }, // Obelisk of Theodosius
-      { latitude: 41.0063, longitude: 28.9775 }, // Serpent Column
-      { latitude: 41.0054, longitude: 28.9768 }, // Blue Mosque exterior
-      { latitude: 41.0082, longitude: 28.9784 }, // Fountain / Hagia Sophia benches
-      { latitude: 41.0068, longitude: 28.9782 }, // Chestnut vendor area
-      { latitude: 41.0086, longitude: 28.9802 }, // Hagia Sophia exterior
-      { latitude: 41.0115, longitude: 28.9842 }, // Topkapi outer gate
-      { latitude: 41.0119, longitude: 28.9825 }, // Gülhane Park
-      { latitude: 41.0139, longitude: 28.9753 }, // Sirkeci Station
-      { latitude: 41.0167, longitude: 28.9700 }, // Spice Bazaar
-      { latitude: 41.0165, longitude: 28.9690 }, // New Mosque
-      { latitude: 41.0178, longitude: 28.9712 }, // Eminönü waterfront
+      { latitude: 41.0057, longitude: 28.9769 }, // Stage 1: German Fountain
+      { latitude: 41.0063, longitude: 28.9773 }, // Stage 2: Obelisk of Theodosius
+      { latitude: 41.0063, longitude: 28.9775 }, // Stage 3: Serpent Column
+      { latitude: 41.0054, longitude: 28.9768 }, // Stage 4: Blue Mosque
+      { latitude: 41.0047, longitude: 28.9781 }, // Stage 5: Arasta Bazaar
+      { latitude: 41.0043, longitude: 28.9778 }, // Stage 6: Mosaic Museum Sign
+      { latitude: 41.0082, longitude: 28.9784 }, // Stage 7: Fountain Viewpoint
+      { latitude: 41.0068, longitude: 28.9790 }, // Stage 8: Chestnut Master
+      { latitude: 41.0086, longitude: 28.9802 }, // Stage 9: Hagia Sophia
+      { latitude: 41.0072, longitude: 28.9764 }, // Stage 10: Basilica Cistern
+      { latitude: 41.0113, longitude: 28.9840 }, // Stage 11: Archaeological Museums
+      { latitude: 41.0119, longitude: 28.9825 }, // Stage 12: Gülhane Park
+      { latitude: 41.0139, longitude: 28.9753 }, // Stage 13: Sirkeci Station
+      { latitude: 41.0192, longitude: 28.9745 }, // Stage 14: Eminönü Ferry View
+      { latitude: 41.0167, longitude: 28.9700 }, // Stage 15: Mısır Çarşısı
     ],
   },
 ];
@@ -400,114 +400,127 @@ export const MOCK_STEPS: QuestStep[] = [
     pointsReward: 150,
   },
 
-  // Istanbul Old City Quest (No Entrance Tickets Required) – 15 steps
+  // Istanbul Old City Quest (No Entrance Tickets Required) – 15 stages
+  // Start: German Fountain (Sultanahmet) → Finish: Mısır Çarşısı (Spice Bazaar)
   {
     id: 'step-iocne-1',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 1,
-    title: 'Welcome to Sultanahmet',
+    title: 'German Fountain',
     description:
-      "You've arrived at the beating heart of Istanbul's Old City. This square has been a gathering place for over 1,500 years — the ceremonial core of Byzantine Constantinople and the political stage of the Ottoman Empire. Look around and get your bearings before the adventure begins.",
-    location: { latitude: 41.0062, longitude: 28.9778 },
-    radius: 80,
-    task: { type: 'arrive' },
+      "Welcome to the Old City. Your first stop is the German Fountain — one of the most recognisable meeting points in Sultanahmet Square. This ornate domed pavilion was gifted by Germany to the Ottoman Empire in 1898 to mark Kaiser Wilhelm II's state visit. But what once occupied this very area of the square?",
+    location: { latitude: 41.0057, longitude: 28.9769 },
+    radius: 30,
+    task: {
+      type: 'quiz',
+      question: 'What was once located in this area of Sultanahmet Square?',
+      options: ['A large harbor', 'A hippodrome', 'A royal prison', 'A military arsenal'],
+      correctAnswer: 'A hippodrome',
+      hint: 'Think about where chariot races and public spectacles took place in ancient Constantinople.',
+    },
     audioUrl: undefined,
-    pointsReward: 50,
+    pointsReward: 75,
   },
   {
     id: 'step-iocne-2',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 2,
-    title: 'The German Fountain',
+    title: 'Obelisk of Theodosius',
     description:
-      "That ornate domed pavilion in the middle of the square is the German Fountain. Built to mark Kaiser Wilhelm II's 1898 visit to Istanbul, it is a symbol of the close diplomatic ties between the German and Ottoman empires. Which country gifted it?",
-    location: { latitude: 41.0057, longitude: 28.9769 },
+      'Find the tall ancient obelisk with carved reliefs on all four sides. This 3,500-year-old granite column was originally quarried in Egypt under Pharaoh Thutmose III, then brought to Constantinople by Emperor Theodosius I in 390 AD. Take a photo where both the top and the base are visible.',
+    location: { latitude: 41.0063, longitude: 28.9773 },
     radius: 30,
-    task: {
-      type: 'quiz',
-      question: 'Which country gifted the German Fountain to the Ottoman Empire?',
-      options: ['Germany', 'France', 'Italy', 'Greece'],
-      correctAnswer: 'Germany',
-      hint: 'It commemorates a state visit by Kaiser Wilhelm II in 1898.',
-    },
-    audioUrl: undefined,
-    pointsReward: 75,
-  },
-  {
-    id: 'step-iocne-3',
-    questId: 'quest-istanbul-old-city-no-entrance',
-    order: 3,
-    title: 'The Ancient Hippodrome',
-    description:
-      'The long open square stretching in front of you was once the great Hippodrome of Constantinople — an arena that held up to 100,000 spectators for chariot races, public ceremonies, and political gatherings. Walk through and imagine the roar of the crowds that once filled this place.',
-    location: { latitude: 41.0063, longitude: 28.9769 },
-    radius: 80,
-    task: { type: 'arrive' },
-    audioUrl: undefined,
-    pointsReward: 50,
-  },
-  {
-    id: 'step-iocne-4',
-    questId: 'quest-istanbul-old-city-no-entrance',
-    order: 4,
-    title: 'The Obelisk of Theodosius',
-    description:
-      'This towering pink-granite column has stood here since 390 AD, but its story begins 3,500 years earlier. Emperor Theodosius I transported it to Constantinople from a distant land. Where did it originally come from?',
-    location: { latitude: 41.0065, longitude: 28.9773 },
-    radius: 30,
-    task: {
-      type: 'quiz',
-      question: 'Where did the Obelisk of Theodosius originally come from?',
-      options: ['Egypt', 'Rome', 'Persia', 'Greece'],
-      correctAnswer: 'Egypt',
-      hint: 'It was originally carved in the reign of pharaoh Thutmose III.',
-    },
-    audioUrl: undefined,
-    pointsReward: 75,
-  },
-  {
-    id: 'step-iocne-5',
-    questId: 'quest-istanbul-old-city-no-entrance',
-    order: 5,
-    title: 'The Serpent Column',
-    description:
-      'Find the twisted bronze column standing nearby — this is the Serpent Column, one of the oldest Greek monuments in existence. It was cast in Delphi around 479 BC to celebrate a Greek victory over the Persian Empire, then moved here by the Byzantines over a thousand years later. Look closely at its spiralling form.',
-    location: { latitude: 41.0063, longitude: 28.9775 },
-    radius: 30,
-    task: { type: 'arrive' },
-    audioUrl: undefined,
-    pointsReward: 50,
-  },
-  {
-    id: 'step-iocne-6',
-    questId: 'quest-istanbul-old-city-no-entrance',
-    order: 6,
-    title: 'Blue Mosque Viewpoint',
-    description:
-      'Step back to get a full view of the Blue Mosque — officially the Sultanahmet Mosque. Six minarets rise above its cascading domes, making it unique among all imperial mosques in Istanbul. Take a photo that captures the scale of this masterpiece from the outside.',
-    location: { latitude: 41.0054, longitude: 28.9768 },
-    radius: 50,
     task: {
       type: 'photo',
-      question: 'Take a photo showing the Blue Mosque domes and minarets from outside.',
-      hint: 'Step back toward the centre of the square for the widest angle.',
+      question: 'Take a photo where both the top and the base of the obelisk are visible.',
+      hint: 'Step back far enough to capture the full height. Including a person in the frame shows just how impressive the scale really is.',
     },
     audioUrl: undefined,
     pointsReward: 100,
   },
   {
+    id: 'step-iocne-3',
+    questId: 'quest-istanbul-old-city-no-entrance',
+    order: 3,
+    title: 'Serpent Column',
+    description:
+      'This small twisted bronze column is easy to overlook, but it has survived over 2,500 years — first in Delphi, Greece, then moved here by the Byzantines. It was cast around 479 BC to celebrate a Greek victory over Persia and is one of the oldest monuments in Istanbul.',
+    location: { latitude: 41.0063, longitude: 28.9775 },
+    radius: 25,
+    task: {
+      type: 'quiz',
+      question: 'Which creature is connected to the name of this column?',
+      options: ['Lion', 'Eagle', 'Serpent', 'Horse'],
+      correctAnswer: 'Serpent',
+      hint: 'Look at the shape of the bronze itself — the column was originally formed by three of them intertwined.',
+    },
+    audioUrl: undefined,
+    pointsReward: 75,
+  },
+  {
+    id: 'step-iocne-4',
+    questId: 'quest-istanbul-old-city-no-entrance',
+    order: 4,
+    title: 'Blue Mosque',
+    description:
+      'Walk toward the Blue Mosque and find a good angle from the square. It is the only imperial mosque in Istanbul with six minarets — a detail that was considered controversial when it was first built. See how many minarets you can fit into a single photo.',
+    location: { latitude: 41.0054, longitude: 28.9768 },
+    radius: 50,
+    task: {
+      type: 'photo',
+      question: 'Take a photo of the Blue Mosque where at least four minarets are visible.',
+      hint: 'Step toward the centre of Sultanahmet Square for the widest view. The total is 6 — see if you can get them all in one frame.',
+    },
+    audioUrl: undefined,
+    pointsReward: 100,
+  },
+  {
+    id: 'step-iocne-5',
+    questId: 'quest-istanbul-old-city-no-entrance',
+    order: 5,
+    title: 'Arasta Bazaar',
+    description:
+      "Behind the Blue Mosque, a quieter bazaar street awaits — Arasta Bazaar. You will find carpets, ceramics, tiles, textiles, and souvenirs in a calmer atmosphere than the Grand Bazaar. Walk through and look for the most beautiful or colourful shop window you can find.",
+    location: { latitude: 41.0047, longitude: 28.9781 },
+    radius: 50,
+    task: {
+      type: 'photo',
+      question: 'Find the most beautiful shop window in Arasta Bazaar and take a photo of it.',
+      hint: 'Look for bright ceramics, stacked spices, hanging lamps, or colourful textile patterns. Try giving your photo a title in your head — for example "Colors of the Old City".',
+    },
+    audioUrl: undefined,
+    pointsReward: 100,
+  },
+  {
+    id: 'step-iocne-6',
+    questId: 'quest-istanbul-old-city-no-entrance',
+    order: 6,
+    title: 'Mosaic Museum Sign',
+    description:
+      'Somewhere near Arasta Bazaar, there is a museum dedicated to the ancient mosaics of the Byzantine Great Palace — intricate floor panels that once decorated the floors beneath the feet of Byzantine emperors. You do not need to go inside. Just find the museum sign and type its name below.',
+    location: { latitude: 41.0043, longitude: 28.9778 },
+    radius: 40,
+    task: {
+      type: 'text_input',
+      question: 'Find the museum sign near Arasta Bazaar and enter its name.',
+      hint: 'The museum is about Byzantine palace mosaics. Look for a sign at street level along the bazaar. Turkish name: Büyük Saray Mozaikleri Müzesi.',
+    },
+    audioUrl: undefined,
+    pointsReward: 75,
+  },
+  {
     id: 'step-iocne-7',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 7,
-    title: 'Fountain Photo Quest',
+    title: 'Fountain Viewpoint',
     description:
-      'Find the benches and open area near the big fountain between the Blue Mosque and Hagia Sophia. This free outdoor space is one of the finest vantage points in Sultanahmet — the historic architecture on every side is extraordinary. Take a photo with the Blue Mosque visible in the background.',
+      'Head to the benches and open fountain area between the Blue Mosque and Hagia Sophia. This is one of the best free vantage points in Sultanahmet — the historic architecture on every side is extraordinary. Take a photo with the Blue Mosque visible behind you. Try a creative pose instead of a standard tourist shot.',
     location: { latitude: 41.0082, longitude: 28.9784 },
     radius: 40,
     task: {
       type: 'photo',
-      question: 'Take a photo from the fountain area with the Blue Mosque visible behind you.',
-      hint: 'Position yourself near the benches with the mosque in the distance.',
+      question: 'Take a photo with yourself, the fountain or bench area, and the Blue Mosque in the background.',
+      hint: 'Stand near the benches and angle the camera so the mosque is behind you. The more creative the pose, the better the memory.',
     },
     audioUrl: undefined,
     pointsReward: 100,
@@ -516,30 +529,35 @@ export const MOCK_STEPS: QuestStep[] = [
     id: 'step-iocne-8',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 8,
-    title: 'The Chestnut Vendor',
+    title: 'The Chestnut Master',
     description:
-      "Look around for a street vendor selling roasted chestnuts near the square. You do not have to buy anything — just spot the cart and take in the smoke, the smell, and the street atmosphere around it. Roasted chestnuts, called 'kestane' in Turkish, are one of Istanbul's most beloved street snacks.",
-    location: { latitude: 41.0068, longitude: 28.9782 },
+      "Find the small red street food cart selling roasted chestnuts and boiled corn near the Hop-on Hop-off bus area. You don't need to buy anything to complete this stage — just find the cart and take a photo with it, as if you're helping with the roasting.",
+    location: { latitude: 41.0068, longitude: 28.9790 },
     radius: 100,
-    task: { type: 'arrive' },
+    task: {
+      // TODO: upgrade to QR scan type once QR scanning is implemented (see (tabs)/layout.tsx QR tab)
+      type: 'photo',
+      question: 'Take a photo with the chestnut and corn cart.',
+      hint: "Look for a small red cart with smoke near the main tourist bus area around Sultanahmet. Strike a pose as if you're helping with the roasting.",
+    },
     audioUrl: undefined,
-    pointsReward: 50,
+    pointsReward: 100,
   },
   {
     id: 'step-iocne-9',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 9,
-    title: 'Hagia Sophia From Outside',
+    title: 'Hagia Sophia',
     description:
-      "You're standing outside one of the most recognisable buildings in the world. Hagia Sophia's massive dome was an engineering marvel when it was completed — it remained the largest cathedral dome on earth for nearly a thousand years. What was it originally built as in 537 AD?",
+      "Stand outside Hagia Sophia and look at one of the most important buildings in Istanbul's history. Its enormous dome was an engineering marvel when completed in 537 AD and remained the largest enclosed dome in the world for nearly a thousand years. Who ordered its construction?",
     location: { latitude: 41.0086, longitude: 28.9802 },
     radius: 50,
     task: {
       type: 'quiz',
-      question: 'What was Hagia Sophia originally built as in 537 AD?',
-      options: ['A Byzantine cathedral', 'An Ottoman palace', 'A Roman market', 'A city gate'],
-      correctAnswer: 'A Byzantine cathedral',
-      hint: 'It was commissioned by Emperor Justinian I of the Byzantine Empire.',
+      question: 'Who ordered the construction of the current Hagia Sophia building?',
+      options: ['Constantine', 'Justinian', 'Suleiman', 'Ahmed I'],
+      correctAnswer: 'Justinian',
+      hint: 'He was a Byzantine emperor who ruled in the 6th century AD and is famous for his vast building programme across Constantinople.',
     },
     audioUrl: undefined,
     pointsReward: 75,
@@ -548,73 +566,87 @@ export const MOCK_STEPS: QuestStep[] = [
     id: 'step-iocne-10',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 10,
-    title: 'The Imperial Gate Area',
+    title: 'Basilica Cistern',
     description:
-      'Walk toward the outer gate of Topkapi Palace and observe the monumental entrance and surrounding fortifications from outside. The palace complex was the main residence and administrative heart of the Ottoman sultans for over four centuries — home to the imperial court, treasuries, and archives.',
-    location: { latitude: 41.0115, longitude: 28.9842 },
-    radius: 80,
-    task: { type: 'arrive' },
-    audioUrl: undefined,
-    pointsReward: 50,
-  },
-  {
-    id: 'step-iocne-11',
-    questId: 'quest-istanbul-old-city-no-entrance',
-    order: 11,
-    title: 'Gülhane Park Walk',
-    description:
-      "Step inside Gülhane Park — entry is free. Follow the main path through the trees and enjoy a rare quiet green space in the heart of the Old City. This park was once part of the outer gardens of Topkapi Palace and later became one of Istanbul's most beloved public spaces, sitting above the Bosphorus shoreline.",
-    location: { latitude: 41.0119, longitude: 28.9825 },
-    radius: 100,
-    task: { type: 'arrive' },
-    audioUrl: undefined,
-    pointsReward: 50,
-  },
-  {
-    id: 'step-iocne-12',
-    questId: 'quest-istanbul-old-city-no-entrance',
-    order: 12,
-    title: 'Sirkeci Station',
-    description:
-      "Sirkeci Station is one of the most storied railway stations in the world. Look at its ornate Orientalist facade — its architects blended Western and Ottoman styles into something unique. This was the final stop of one of Europe's most legendary train routes. Which one?",
-    location: { latitude: 41.0139, longitude: 28.9753 },
-    radius: 50,
+      "You do not need to enter the Basilica Cistern for this stage. Walk near the entrance or exit area and take in the exterior. The cistern was built in the 6th century to store water for the Byzantine palace district. Deep inside, two ancient stone column bases have a famous mythological face carved into them.",
+    location: { latitude: 41.0072, longitude: 28.9764 },
+    radius: 40,
     task: {
       type: 'quiz',
-      question: 'Sirkeci Station is historically connected with which famous train route?',
-      options: ['Orient Express', 'Trans-Siberian Railway', 'Flying Scotsman', 'Glacier Express'],
-      correctAnswer: 'Orient Express',
-      hint: 'It connected Paris and Istanbul and was immortalised by Agatha Christie.',
+      question: 'Which famous mythological figure is connected with the Basilica Cistern?',
+      options: ['Zeus', 'Medusa', 'Athena', 'Hercules'],
+      correctAnswer: 'Medusa',
+      hint: 'Two column bases with this figure were placed upside down and sideways — no one is entirely sure why.',
     },
     audioUrl: undefined,
     pointsReward: 75,
   },
   {
+    id: 'step-iocne-11',
+    questId: 'quest-istanbul-old-city-no-entrance',
+    order: 11,
+    title: 'Archaeological Museums',
+    description:
+      "Walk toward the museum area near Gülhane Park and Topkapı Palace. The Istanbul Archaeological Museums complex holds one of the world's most impressive collections of ancient artefacts — but you only need to find the entrance sign and photograph it. No ticket required.",
+    location: { latitude: 41.0113, longitude: 28.9840 },
+    radius: 60,
+    task: {
+      type: 'photo',
+      question: 'Find the entrance or sign of the Istanbul Archaeological Museums and take a photo.',
+      hint: 'Look for the gate and sign between Gülhane Park and the outer walls of Topkapı Palace.',
+    },
+    audioUrl: undefined,
+    pointsReward: 100,
+  },
+  {
+    id: 'step-iocne-12',
+    questId: 'quest-istanbul-old-city-no-entrance',
+    order: 12,
+    title: 'Gülhane Park',
+    description:
+      "Enter Gülhane Park — free to all, open to everyone. This is one of the oldest green spaces in Istanbul and once formed the outer gardens of Topkapı Palace. Find a beautiful path, garden corner, fountain, or quiet spot and take a photo. Which palace was this park once connected to?",
+    location: { latitude: 41.0119, longitude: 28.9825 },
+    radius: 100,
+    task: {
+      type: 'photo',
+      question: 'Take a photo of a beautiful path, garden area, fountain, or quiet corner inside Gülhane Park.',
+      hint: 'Gülhane was the private garden of one of Istanbul\'s most famous palace complexes. The roses and tree-lined paths have been here for centuries.',
+    },
+    audioUrl: undefined,
+    pointsReward: 100,
+  },
+  {
     id: 'step-iocne-13',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 13,
-    title: 'Spice Market Entrance',
+    title: 'Sirkeci Station',
     description:
-      "You've reached the Spice Bazaar — also known as the Egyptian Market or Mısır Çarşısı. The aromas of saffron, sumac, dried figs, and Turkish tea reach you well before you step inside. Complete this stage from the entrance area, or walk through the covered market if it is open.",
-    location: { latitude: 41.0167, longitude: 28.9700 },
-    radius: 60,
-    task: { type: 'arrive' },
+      "Walk to Sirkeci Station — one of the most atmospheric railway buildings in Istanbul. Built in 1890, its design blends Western and Ottoman styles into something entirely its own. For decades it was the final stop of one of Europe's most legendary and romanticised train journeys.",
+    location: { latitude: 41.0139, longitude: 28.9753 },
+    radius: 50,
+    task: {
+      type: 'quiz',
+      question: 'Which famous train is strongly connected with Sirkeci Station?',
+      options: ['Taurus Express', 'Orient Express', 'Balkan Express', 'Silk Road Express'],
+      correctAnswer: 'Orient Express',
+      hint: 'Agatha Christie made this train famous in one of her best-known novels.',
+    },
     audioUrl: undefined,
-    pointsReward: 50,
+    pointsReward: 75,
   },
   {
     id: 'step-iocne-14',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 14,
-    title: 'New Mosque Courtyard View',
+    title: 'Eminönü Ferry View',
     description:
-      "The New Mosque — Yeni Cami — stands at the edge of Eminönü with its grey stone domes and twin minarets. Despite its name, it was completed in 1665 and has overlooked this busy waterfront for nearly 360 years. Find a clear angle and take a photo of the domes or the surrounding courtyard.",
-    location: { latitude: 41.0165, longitude: 28.9690 },
-    radius: 50,
+      "Walk toward the Eminönü waterfront where ferries depart in every direction across the Bosphorus and the Golden Horn. The view here is one of Istanbul's most iconic — Galata Bridge, Galata Tower, seagulls, ferry horns, and the smell of the sea all come together. Capture as much of it as you can in a single photo.",
+    location: { latitude: 41.0192, longitude: 28.9745 },
+    radius: 100,
     task: {
       type: 'photo',
-      question: 'Take a photo of the New Mosque from the square or courtyard area.',
-      hint: 'Step back toward the square to capture the full dome and minaret silhouette.',
+      question: 'Take a panoramic photo at the Eminönü waterfront. Try to include at least two of: ferries, the sea, Galata Bridge, or Galata Tower.',
+      hint: 'Turn toward the water and Galata Bridge. The best angle is usually near the ferry ticket booths, looking north across the Golden Horn.',
     },
     audioUrl: undefined,
     pointsReward: 100,
@@ -623,12 +655,18 @@ export const MOCK_STEPS: QuestStep[] = [
     id: 'step-iocne-15',
     questId: 'quest-istanbul-old-city-no-entrance',
     order: 15,
-    title: 'Finish at Eminönü',
+    title: 'Mısır Çarşısı',
     description:
-      "You've made it to the Eminönü waterfront. Look out toward the Galata Bridge and the Golden Horn — you are standing at one of Istanbul's most iconic crossroads, where ferries, fish stalls, mosques, and street vendors have come together for centuries. Quest complete.",
-    location: { latitude: 41.0178, longitude: 28.9712 },
-    radius: 100,
-    task: { type: 'arrive' },
+      "Welcome to the final stage. You've arrived at the Spice Bazaar — one of Istanbul's most atmospheric markets, filled with spices, Turkish delight, dried fruits, tea, and the sweet smell of lokum. Find a colourful stall and take a good look around. Now answer this to complete your quest.",
+    location: { latitude: 41.0167, longitude: 28.9700 },
+    radius: 60,
+    task: {
+      type: 'quiz',
+      question: 'What does "Mısır Çarşısı" mean in English?',
+      options: ['Golden Bazaar', 'Egyptian Bazaar', 'Fish Market', "Sultan's Bazaar"],
+      correctAnswer: 'Egyptian Bazaar',
+      hint: 'The bazaar was originally funded by the tax revenues of Egypt during the Ottoman period.',
+    },
     audioUrl: undefined,
     pointsReward: 150,
   },
