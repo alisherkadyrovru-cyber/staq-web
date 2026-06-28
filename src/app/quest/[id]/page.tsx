@@ -24,6 +24,9 @@ const TASK_LABELS: Record<string, string> = {
   text_input:  '✍️ Answer a question',
   video:       '🎬 Video challenge',
   find_person: '🤝 Find someone',
+  photo_quiz:  '📷❓ Photo + Quiz',
+  video_quiz:  '🎬❓ Video + Quiz',
+  qr_photo:    '📲📷 QR + Photo',
 };
 
 const DIFFICULTY_STYLE: Record<string, { bg: string; text: string }> = {

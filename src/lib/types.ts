@@ -49,11 +49,15 @@ export interface Quest {
 // ─── Quest Step ───────────────────────────────────────────────────────────────
 
 export interface StepTask {
-  type: 'arrive' | 'photo' | 'video' | 'quiz' | 'text_input' | 'find_person';
-  question?: string;
-  options?: string[];       // for quiz
-  correctAnswer?: string;
+  type: 'arrive' | 'photo' | 'video' | 'quiz' | 'text_input' | 'find_person'
+       | 'photo_quiz' | 'video_quiz' | 'qr_photo';
+  question?: string;          // quiz question, or single-task prompt for photo/video
+  options?: string[];         // quiz answer options
+  correctAnswer?: string;     // quiz correct answer
   hint?: string;
+  acceptedAnswers?: string[]; // text_input: valid answer variants (normalized, case-insensitive)
+  prompt?: string;            // combined types: instruction for the media (photo/video) part
+  qrUnlockMessage?: string;   // qr_photo: message revealed after QR confirmation
 }
 
 export interface QuestStep {

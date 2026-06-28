@@ -501,9 +501,13 @@ function ProximityPanel({
 function TaskUI({ step, onComplete }: { step: QuestStep; onComplete: (r: string) => void }) {
   switch (step.task.type) {
     case 'arrive':     return null;
-    case 'quiz':       return <QuizTask task={step.task} onComplete={onComplete} />;
-    case 'text_input': return <TextTask task={step.task} onComplete={onComplete} />;
-    case 'photo':      return <PhotoTask task={step.task} onComplete={onComplete} />;
+    case 'quiz':       return <QuizTask     task={step.task} onComplete={onComplete} />;
+    case 'text_input': return <TextTask     task={step.task} onComplete={onComplete} />;
+    case 'photo':      return <PhotoTask    task={step.task} onComplete={onComplete} />;
+    case 'video':      return <VideoTask    task={step.task} onComplete={onComplete} />;
+    case 'photo_quiz': return <PhotoQuizTask task={step.task} onComplete={onComplete} />;
+    case 'video_quiz': return <VideoQuizTask task={step.task} onComplete={onComplete} />;
+    case 'qr_photo':   return <QrPhotoTask  task={step.task} onComplete={onComplete} />;
     default:
       return (
         <button
@@ -569,10 +573,21 @@ function TextTask({ task, onComplete }: { task: QuestStep['task']; onComplete: (
   const [value, setValue] = useState('');
   const [error, setError] = useState(false);
 
+  function normalize(s: string) {
+    return s.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
   function submit() {
-    if (!value.trim()) return;
-    if (task.correctAnswer && value.trim().toLowerCase() !== task.correctAnswer.toLowerCase()) {
-      setError(true); return;
+    const n = normalize(value);
+    if (!n) return;
+    if (task.acceptedAnswers && task.acceptedAnswers.length > 0) {
+      if (!task.acceptedAnswers.some((a) => normalize(a) === n)) {
+        setError(true); return;
+      }
+    } else if (task.correctAnswer) {
+      if (normalize(task.correctAnswer) !== n) {
+        setError(true); return;
+      }
     }
     onComplete(value.trim());
   }
@@ -681,6 +696,199 @@ function TaskDoneBanner({ points }: { points: number }) {
         <p className="font-bold text-sm" style={{ color: '#15803d' }}>Task complete!</p>
         <p className="text-xs mt-0.5" style={{ color: '#16a34a' }}>+{points} points earned</p>
       </div>
+    </div>
+  );
+}
+
+// ─── New mechanics ─────────────────────────────────────────────────────────────
+
+function VideoTask({ task, onComplete }: { task: QuestStep['task']; onComplete: (r: string) => void }) {
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setVideoUrl(URL.createObjectURL(file));
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="text-sm font-semibold leading-snug" style={{ color: '#1e293b' }}>
+        {task.question ?? 'Record a short video'}
+      </p>
+      {!videoUrl ? (
+        <div className="flex flex-col gap-2">
+          <label
+            className="flex flex-col items-center justify-center rounded-2xl cursor-pointer transition-opacity hover:opacity-80"
+            style={{ height: 144, backgroundColor: '#f1f5f9', border: '2px dashed #cbd5e1' }}
+          >
+            <span style={{ fontSize: 40 }}>🎬</span>
+            <span className="text-sm font-medium mt-2" style={{ color: '#64748b' }}>Tap to record or upload video</span>
+            <input type="file" accept="video/*" capture="environment" onChange={handleFileChange} className="hidden" />
+          </label>
+          <button
+            onClick={() => onComplete('https://example.com/dev-video-' + Date.now())}
+            className="rounded-xl py-2.5 font-semibold text-sm"
+            style={{ border: '2px dashed #fcd34d', backgroundColor: '#fffbeb', color: '#d97706' }}
+          >
+            🛠 DEV — Use Test Video
+          </button>
+        </div>
+      ) : (
+        <div className="relative">
+          <video src={videoUrl} controls className="w-full rounded-2xl" style={{ maxHeight: 192 }} />
+          <button
+            onClick={() => setVideoUrl(null)}
+            className="absolute top-2 right-2 rounded-full px-3 py-1 text-xs text-white font-medium"
+            style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}
+          >
+            Retake
+          </button>
+        </div>
+      )}
+      {videoUrl && (
+        <button
+          onClick={() => onComplete(videoUrl)}
+          className="w-full rounded-2xl py-3.5 font-bold text-white text-sm transition-opacity hover:opacity-90"
+          style={{ backgroundColor: '#4f46e5' }}
+        >
+          Submit Video ✓
+        </button>
+      )}
+      {task.hint && !videoUrl && (
+        <p className="text-xs text-center" style={{ color: '#94a3b8' }}>Hint: {task.hint}</p>
+      )}
+    </div>
+  );
+}
+
+function RequirementBadges({ items }: { items: { label: string; done: boolean }[] }) {
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {items.map((item) => (
+        <span
+          key={item.label}
+          className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold"
+          style={{
+            backgroundColor: item.done ? '#f0fdf4' : '#f8fafc',
+            color:           item.done ? '#15803d' : '#64748b',
+            border:          `1px solid ${item.done ? '#bbf7d0' : '#e2e8f0'}`,
+          }}
+        >
+          {item.done ? '✓ ' : ''}{item.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function PhotoQuizTask({ task, onComplete }: { task: QuestStep['task']; onComplete: (r: string) => void }) {
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+
+  const photoTask = { ...task, question: task.prompt ?? 'Take a photo for this stage.' };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <RequirementBadges items={[
+        { label: '📷 Photo', done: photoUrl !== null },
+        { label: '❓ Quiz',  done: false },
+      ]} />
+      {photoUrl === null ? (
+        <PhotoTask task={photoTask} onComplete={(url) => setPhotoUrl(url)} />
+      ) : (
+        <>
+          <div
+            className="flex items-center gap-2 rounded-xl px-3 py-2.5"
+            style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0' }}
+          >
+            <span>📷</span>
+            <span className="text-sm font-semibold" style={{ color: '#15803d' }}>Photo submitted — now answer the quiz</span>
+          </div>
+          <QuizTask task={task} onComplete={(ans) => onComplete(`photo:${photoUrl}|quiz:${ans}`)} />
+        </>
+      )}
+    </div>
+  );
+}
+
+function VideoQuizTask({ task, onComplete }: { task: QuestStep['task']; onComplete: (r: string) => void }) {
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+  const videoTask = { ...task, question: task.prompt ?? 'Record a short video for this stage.' };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <RequirementBadges items={[
+        { label: '🎬 Video', done: videoUrl !== null },
+        { label: '❓ Quiz',  done: false },
+      ]} />
+      {videoUrl === null ? (
+        <VideoTask task={videoTask} onComplete={(url) => setVideoUrl(url)} />
+      ) : (
+        <>
+          <div
+            className="flex items-center gap-2 rounded-xl px-3 py-2.5"
+            style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0' }}
+          >
+            <span>🎬</span>
+            <span className="text-sm font-semibold" style={{ color: '#15803d' }}>Video submitted — now answer the quiz</span>
+          </div>
+          <QuizTask task={task} onComplete={(ans) => onComplete(`video:${videoUrl}|quiz:${ans}`)} />
+        </>
+      )}
+    </div>
+  );
+}
+
+function QrPhotoTask({ task, onComplete }: { task: QuestStep['task']; onComplete: (r: string) => void }) {
+  const [qrDone, setQrDone] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+
+  const photoTask = { ...task, question: task.prompt ?? 'Take a photo.' };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <RequirementBadges items={[
+        { label: '📲 QR Scan', done: qrDone },
+        { label: '📷 Photo',   done: photoUrl !== null },
+      ]} />
+      {!qrDone ? (
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => setQrDone(true)}
+            className="w-full rounded-2xl py-4 font-bold text-white text-base transition-opacity hover:opacity-90 active:opacity-80"
+            style={{ backgroundColor: '#4f46e5' }}
+          >
+            📲 Scan STaQ QR Code
+          </button>
+          <p className="text-xs text-center" style={{ color: '#94a3b8' }}>
+            Find the STaQ QR code on the vendor's cart and tap to scan.
+          </p>
+        </div>
+      ) : (
+        <>
+          {task.qrUnlockMessage && (
+            <div
+              className="rounded-2xl p-4 flex flex-col gap-1.5"
+              style={{ backgroundColor: '#fffbeb', border: '1px solid #fcd34d' }}
+            >
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#d97706' }}>
+                🎉 QR Unlocked
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: '#92400e' }}>
+                {task.qrUnlockMessage}
+              </p>
+            </div>
+          )}
+          <PhotoTask
+            task={photoTask}
+            onComplete={(url) => {
+              setPhotoUrl(url);
+              onComplete(`qr:scanned|photo:${url}`);
+            }}
+          />
+        </>
+      )}
     </div>
   );
 }
